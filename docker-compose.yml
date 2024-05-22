@@ -1,0 +1,39 @@
+services:
+  curs-tg-bot-db:
+    image: postgres:16.1
+    container_name: "curs-tg-bot-db"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - 5433:5432
+    volumes:
+      - curs_tg_bot_db_volume:/var/lib/postgresql/data/
+    networks:
+      - backend
+
+  curs-tg-bot-app:
+    image: curs-tg-bot-app
+    container_name: curs-tg-bot-app
+    depends_on:
+      - curs-tg-bot-db
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      DB_HOST: curs-tg-bot-db
+    entrypoint: ["/bot-app/docker/app"]
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  curs_tg_bot_db_volume:
