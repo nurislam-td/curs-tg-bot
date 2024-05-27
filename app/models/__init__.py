@@ -5,5 +5,5 @@ __all__ = (
 )
 
 from .base import Base
-from .keyword_map import KeywordMap
+from .keyword import KeywordMap
 from .user import User
