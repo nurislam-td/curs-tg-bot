@@ -13,3 +13,7 @@ class TimeStampMixin:
         server_default=text("(now() at time zone 'utc')"),
         onupdate=text("(now() at time zone 'utc')"),
     )
+
+
+class IntPKMixin:
+    id: Mapped[int] = mapped_column(index=True, primary_key=True, autoincrement=True)

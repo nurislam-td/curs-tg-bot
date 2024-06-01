@@ -1,9 +1,14 @@
 __all__ = (
     "Base",
-    "User",
+    "TGUser",
     "KeywordMap",
+    "Chat",
+    "KeywordGroupKeywordMap",
+    "Keyword",
+    "KeywordGroup",
 )
 
 from .base import Base
-from .keyword import KeywordMap
-from .user import User
+from .keyword import KeywordMap, KeywordGroupKeywordMap, Keyword, KeywordGroup
+from .user import TGUser
+from .chat import Chat
