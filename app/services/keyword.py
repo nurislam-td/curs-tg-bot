@@ -1,5 +1,4 @@
 import dataclasses
-from datetime import datetime
 
 from app.services.abstract.unit_of_work import UnitOfWork
 
@@ -9,10 +8,7 @@ class KeywordGroup:
     id: int
     title: str
     description: str
-    keywords: list[str]
     is_active: bool
-    created_at: datetime
-    updated_at: datetime
 
     def as_dict(self):
         return dataclasses.asdict(self)
