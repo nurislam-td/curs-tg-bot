@@ -1,0 +1,6 @@
+.venv/
+.gitignore
+Readme.md
+__pycache__/
+*.py[cod]
+*$py.class
