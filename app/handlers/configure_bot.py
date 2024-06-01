@@ -4,6 +4,7 @@ from aiogram.fsm.context import FSMContext
 
 from app.keyboards.text import CallbackDataText
 from app.states.configure_bot import ConfigureBot
+from app.services import keyword
 
 router = Router()
 
@@ -17,6 +18,13 @@ async def configure_bot_start(callback_query: CallbackQuery, state: FSMContext):
     )
 
 
-@router.message()
-async def configure_bot_set_keywords(message: Message):
-    pass
+@router.message(ConfigureBot.keywords)
+async def configure_bot_set_keywords(message: Message, state: FSMContext):
+    keywords_text = message.text
+    await keyword.set_keywords(keywords_text, uow, tokenizer)
+    await state.set_state(ConfigureBot.group_title)
+    await message.answer(
+        text="Супер, выберите группу в которую вы хотите добавить слова или создайте новую",
+        reply_markup=get_group_select_keyboard(),
+    )
+    # TODO done this
