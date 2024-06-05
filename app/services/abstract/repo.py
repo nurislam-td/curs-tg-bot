@@ -1,7 +1,7 @@
 from abc import abstractmethod, ABC
 from typing import Generic, TypeVar
 
-from app.services.keyword import KeywordGroup, Keyword
+from app.services.entity.keyword import KeywordGroup, Keyword
 
 DTO = TypeVar("DTO")
 
