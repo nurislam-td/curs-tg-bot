@@ -1,7 +1,7 @@
 from abc import abstractmethod, ABC
 from typing import Generic, TypeVar
 
-from app.services.keyword import KeywordGroup
+from app.services.keyword import KeywordGroup, Keyword
 
 DTO = TypeVar("DTO")
 
@@ -28,3 +28,10 @@ class Repo(Generic[DTO]):
 
 class KeywordGroupRepo(Repo[KeywordGroup], ABC):
     pass
+
+
+class KeywordRepo(Repo[Keyword], ABC):
+    @abstractmethod
+    async def create_if_not_exists(
+        self, keywords: list[str]
+    ) -> list[Keyword] | None: ...

@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
-from app.services.abstract.repo import KeywordGroupRepo
+from app.services.abstract.repo import KeywordGroupRepo, KeywordRepo
 
 
 class UnitOfWork(ABC):
     keyword_group: KeywordGroupRepo
+    keyword: KeywordRepo
 
     @abstractmethod
     def __init__(self): ...
