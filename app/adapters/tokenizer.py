@@ -12,9 +12,10 @@ class NLTKTokenizer(Tokenizer):
     def __new__(cls, *args, **kwargs):
         if not isinstance(cls._instance, cls):
             cls._instance = super().__new__(cls, *args, **kwargs)
+            cls._initialize()
         return cls._instance
 
-    def __init__(self):
+    def _initialize(self):
         self.tokenizer = word_tokenize
         self.stopwords = set(stopwords.words("russian"))
         self.stemmer = SnowballStemmer("russian")
