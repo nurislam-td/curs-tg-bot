@@ -2,7 +2,8 @@ from app.config.database import async_session_maker
 from app.models import keyword
 from app.adapters.keyword_repo import AlchemyKeywordRepo
 from app.adapters.keyword_group_repo import AlchemyKeywordGroupRepo
-from app.services.entity.keyword import KeywordGroup, Keyword
+from app.adapters.keyword_group_map_repo import AlchemyKeywordGroupMapRepo
+from app.services.entity.keyword import KeywordGroup, Keyword, KeywordGroupMap
 from app.services.abstract.unit_of_work import UnitOfWork
 
 
@@ -24,6 +25,11 @@ class SQLAlchemyUnitOfWork(UnitOfWork):
             session=self.session,
             schema=KeywordGroup,
             model=keyword.KeywordGroup,
+        )
+        self.keyword_group_map = AlchemyKeywordGroupMapRepo(
+            session=self.session,
+            schema=KeywordGroupMap,
+            model=keyword.KeywordGroupKeywordMap,
         )
 
     async def __aexit__(self, *args):

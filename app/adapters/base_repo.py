@@ -37,16 +37,12 @@ class AlchemyRepo(Repo[DTO]):
     async def fetch_one(self, query: Select | Insert | Update) -> DTO | None:
         result: Result = await self.session.execute(query)
         data = result.mappings().one_or_none()
-        return self._schema.model_validate(data) if data else None
+        return self._schema(**data) if data else None
 
     async def fetch_all(self, query: Select | Insert | Update) -> list[DTO] | None:
         result: Result = await self.session.execute(query)
         data_list = result.mappings().all()
-        return (
-            [self._schema.model_validate(data) for data in data_list]
-            if data_list
-            else None
-        )
+        return [self._schema(**data) for data in data_list] if data_list else None
 
     async def execute(self, query: Insert | Update | Delete) -> None:
         await self.session.execute(query)

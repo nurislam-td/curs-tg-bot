@@ -15,3 +15,10 @@ class KeywordGroup(Base):
 class Keyword(Base):
     id: int
     keyword: str
+
+
+@dataclasses.dataclass
+class KeywordGroupMap(Base):
+    id: int
+    keyword_id: int
+    group_id: int

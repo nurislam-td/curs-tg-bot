@@ -1,7 +1,7 @@
 from abc import abstractmethod, ABC
 from typing import Generic, TypeVar
 
-from app.services.entity.keyword import KeywordGroup, Keyword
+from app.services.entity.keyword import KeywordGroup, Keyword, KeywordGroupMap
 
 DTO = TypeVar("DTO")
 
@@ -27,7 +27,8 @@ class Repo(Generic[DTO]):
 
 
 class KeywordGroupRepo(Repo[KeywordGroup], ABC):
-    pass
+    @abstractmethod
+    async def get_by_title(self, title: str) -> KeywordGroup | None: ...
 
 
 class KeywordRepo(Repo[Keyword], ABC):
@@ -35,3 +36,10 @@ class KeywordRepo(Repo[Keyword], ABC):
     async def create_if_not_exists(
         self, keywords: list[str]
     ) -> list[Keyword] | None: ...
+
+
+class KeywordGroupMapRepo(Repo[KeywordGroupMap], ABC):
+    @abstractmethod
+    async def create_keywords_group_maps(
+        self, keyword_group_maps: list[KeywordGroupMap]
+    ) -> list[KeywordGroupMap] | None: ...

@@ -2,4 +2,8 @@
 
 alembic upgrade head
 
+python3.12 -m nltk.downloader 'punkt'
+python3.12 -m nltk.downloader 'stopwords'
+
+
 python3.12 app/main.py
