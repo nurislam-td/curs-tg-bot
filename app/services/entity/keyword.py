@@ -16,6 +16,12 @@ class KeywordGroupMapCreate(BaseModel):
     group_id: int
 
 
+class KeywordMapCreate(BaseModel):
+    keyword_id: int
+    chat_id: int
+    tg_user_id: int
+
+
 class KeywordGroupDTO(BaseModel):
     id: int
     title: str
@@ -32,3 +38,10 @@ class KeywordGroupMapDTO(BaseModel):
     id: int
     keyword_id: int
     group_id: int
+
+
+class KeywordMapDTO(BaseModel):
+    id: int
+    keyword_id: int
+    chat_id: int
+    tg_user_id: int

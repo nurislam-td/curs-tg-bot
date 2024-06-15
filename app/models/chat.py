@@ -9,8 +9,8 @@ if TYPE_CHECKING:
 
 class Chat(Base):
     __tablename__ = "chat"
-    id: Mapped[str] = mapped_column(primary_key=True, index=True)
-    title: Mapped[str]
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    title: Mapped[str | None]
     description: Mapped[str | None]
     keyword_map: Mapped[list["KeywordMap"]] = relationship(
         "KeywordMap", back_populates="chat"

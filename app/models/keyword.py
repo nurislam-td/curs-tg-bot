@@ -40,7 +40,7 @@ class KeywordGroupKeywordMap(IntPKMixin, Base):
 class KeywordMap(IntPKMixin, TimeStampMixin, Base):
     __tablename__ = "keyword_map"
 
-    chat_id: Mapped[str] = mapped_column(ForeignKey("chat.id", ondelete="CASCADE"))
+    chat_id: Mapped[int] = mapped_column(ForeignKey("chat.id", ondelete="CASCADE"))
     chat: Mapped["Chat"] = relationship("Chat", back_populates="keyword_map")
 
     keyword_id: Mapped[int] = mapped_column(
@@ -48,7 +48,7 @@ class KeywordMap(IntPKMixin, TimeStampMixin, Base):
     )
     keyword: Mapped["Keyword"] = relationship("Keyword", back_populates="keyword_map")
 
-    tg_user_id: Mapped[str] = mapped_column(
+    tg_user_id: Mapped[int] = mapped_column(
         ForeignKey("tg_user.id", ondelete="CASCADE"),
         index=True,
     )

@@ -1,12 +1,15 @@
 from app.services.abstract.unit_of_work import UnitOfWork
 from app.services.abstract.tokenizer import Tokenizer
+from app.services.entity.chat import ChatCreate
 from app.services.entity.keyword import (
     KeywordGroupCreate,
     KeywordGroupMapCreate,
     KeywordGroupDTO,
     KeywordCreate,
     KeywordDTO,
+    KeywordMapCreate,
 )
+from app.services.entity.user import TGUserCreate
 
 
 async def set_keywords(
@@ -47,3 +50,19 @@ async def add_group(uow: UnitOfWork, group: KeywordGroupCreate) -> KeywordGroupD
         keyword_group = await uow.keyword_group.create(values=group.model_dump())
         await uow.commit()
     return keyword_group
+
+
+async def save_keyword_map(
+    tg_user: TGUserCreate, chat: ChatCreate, keywords: list[KeywordDTO], uow: UnitOfWork
+):
+    async with uow:
+        await uow.tg_user.create_if_not_exists(tg_user)
+        await uow.chat.create_if_not_exists(chat)
+        keyword_maps = [
+            KeywordMapCreate(
+                keyword_id=keyword.id, chat_id=chat.id, tg_user_id=tg_user.id
+            )
+            for keyword in keywords
+        ]
+        await uow.keyword_map.create_many(keyword_maps)
+        await uow.commit()

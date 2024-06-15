@@ -1,14 +1,22 @@
+from app.adapters.chat import AlchemyChatRepo
+from app.adapters.keyword_map_repo import AlchemyKeywordMapRepo
+from app.adapters.report_repo import AlchemyReportRepo
+from app.adapters.user import AlchemyTGUserRepo
 from app.config.database import async_session_maker
-from app.models import keyword
+from app.models import keyword, user, chat, reports
 from app.adapters.keyword_repo import AlchemyKeywordRepo
 from app.adapters.keyword_group_repo import AlchemyKeywordGroupRepo
 from app.adapters.keyword_group_map_repo import AlchemyKeywordGroupMapRepo
+from app.services.entity.chat import ChatDTO
 from app.services.entity.keyword import (
     KeywordGroupDTO,
     KeywordDTO,
     KeywordGroupMapDTO,
+    KeywordMapDTO,
 )
 from app.services.abstract.unit_of_work import UnitOfWork
+from app.services.entity.reports import ReportDTO
+from app.services.entity.user import TGUserDTO
 
 
 class SQLAlchemyUnitOfWork(UnitOfWork):
@@ -34,6 +42,20 @@ class SQLAlchemyUnitOfWork(UnitOfWork):
             session=self.session,
             schema=KeywordGroupMapDTO,
             model=keyword.KeywordGroupKeywordMap,
+        )
+        self.keyword_map = AlchemyKeywordMapRepo(
+            session=self.session,
+            schema=KeywordMapDTO,
+            model=keyword.KeywordMap,
+        )
+        self.tg_user = AlchemyTGUserRepo(
+            session=self.session, schema=TGUserDTO, model=user.TGUser
+        )
+        self.chat = AlchemyChatRepo(
+            session=self.session, schema=ChatDTO, model=chat.Chat
+        )
+        self.report = AlchemyReportRepo(
+            session=self.session, schema=ReportDTO, model=reports.KeywordMapReport
         )
 
     async def __aexit__(self, *args):
