@@ -7,7 +7,7 @@ from app.keyboards.inline import get_group_select_keyboard
 from app import dependencies
 from app.services.abstract.unit_of_work import UnitOfWork
 from app.services.abstract.tokenizer import Tokenizer
-from app.services.entity.keyword import KeywordGroup
+from app.services.entity.keyword import KeywordGroupCreate
 from app.states.configure_bot import ConfigureBot
 from app.services import keyword
 
@@ -32,8 +32,9 @@ async def configure_bot_start(callback_query: CallbackQuery, uow: UnitOfWork):
 async def configure_bot_select_groups(
     callback_query: CallbackQuery, state: FSMContext, uow
 ):
+    await callback_query.answer()
     selected_group = callback_query.message.text
-    group = keyword.get_keyword_group(uow=uow, group_title=selected_group)
+    group = await keyword.get_keyword_group(uow=uow, group_title=selected_group)
     await state.update_data(group=group)
     await state.set_state(ConfigureBot.keywords)
     await callback_query.message.answer(
@@ -62,7 +63,7 @@ async def configure_bot_add_group_description(
     message: Message, state: FSMContext, uow: UnitOfWork
 ):
     group_info = await state.get_data()
-    group = KeywordGroup(
+    group = KeywordGroupCreate(
         title=group_info["group_title"],
         description=message.text,
     )

@@ -1,6 +1,6 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from app.keyboards.text import CallbackDataText, ButtonText
-from app.services.entity.keyword import KeywordGroup
+from app.services.entity.keyword import KeywordGroupCreate
 
 
 def get_config_button():
@@ -11,7 +11,7 @@ def get_config_button():
     return builder.as_markup()
 
 
-async def get_group_select_keyboard(groups: list[KeywordGroup] | None):
+async def get_group_select_keyboard(groups: list[KeywordGroupCreate] | None):
     builder = InlineKeyboardBuilder()
     if groups:
         for group in groups:

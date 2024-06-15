@@ -3,7 +3,11 @@ from app.models import keyword
 from app.adapters.keyword_repo import AlchemyKeywordRepo
 from app.adapters.keyword_group_repo import AlchemyKeywordGroupRepo
 from app.adapters.keyword_group_map_repo import AlchemyKeywordGroupMapRepo
-from app.services.entity.keyword import KeywordGroup, Keyword, KeywordGroupMap
+from app.services.entity.keyword import (
+    KeywordGroupCreate,
+    KeywordCreate,
+    KeywordGroupMapCreate,
+)
 from app.services.abstract.unit_of_work import UnitOfWork
 
 
@@ -18,17 +22,17 @@ class SQLAlchemyUnitOfWork(UnitOfWork):
         self.session = self.session_factory()
         self.keyword = AlchemyKeywordRepo(
             session=self.session,
-            schema=Keyword,
+            schema=KeywordCreate,
             model=keyword.Keyword,
         )
         self.keyword_group = AlchemyKeywordGroupRepo(
             session=self.session,
-            schema=KeywordGroup,
+            schema=KeywordGroupCreate,
             model=keyword.KeywordGroup,
         )
         self.keyword_group_map = AlchemyKeywordGroupMapRepo(
             session=self.session,
-            schema=KeywordGroupMap,
+            schema=KeywordGroupMapCreate,
             model=keyword.KeywordGroupKeywordMap,
         )
 

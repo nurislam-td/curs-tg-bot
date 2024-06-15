@@ -10,7 +10,7 @@ else:
     DATABASE_URL = "test url"
     DATABASE_PARAMS = {"poolclass": NullPool}
 
-async_engine = create_async_engine(DATABASE_URL, **DATABASE_PARAMS)
+async_engine = create_async_engine(DATABASE_URL, echo=True, **DATABASE_PARAMS)
 async_session_maker = async_sessionmaker(
     async_engine, autoflush=False, expire_on_commit=False
 )

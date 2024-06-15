@@ -1,24 +1,37 @@
-import dataclasses
+import uuid
 
-from app.services.base import Base
+from pydantic import BaseModel, Field
 
 
-@dataclasses.dataclass
-class KeywordGroup(Base):
+class KeywordGroupCreate(BaseModel):
+    title: str
+    description: str
+    is_active: bool = True
+
+
+class KeywordCreate(BaseModel):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4)
+    keyword: str
+
+
+class KeywordGroupMapCreate(BaseModel):
+    keyword_id: int
+    group_id: int
+
+
+class KeywordGroupDTO(BaseModel):
     id: int
     title: str
     description: str
-    is_active: bool
+    is_active: bool = True
 
 
-@dataclasses.dataclass
-class Keyword(Base):
+class KeywordDTO(BaseModel):
     id: int
     keyword: str
 
 
-@dataclasses.dataclass
-class KeywordGroupMap(Base):
+class KeywordGroupMapDTO(BaseModel):
     id: int
     keyword_id: int
     group_id: int

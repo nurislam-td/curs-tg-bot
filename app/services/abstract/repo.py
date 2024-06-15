@@ -1,9 +1,16 @@
 from abc import abstractmethod, ABC
-from typing import Generic, TypeVar
+from typing import Generic, TypeVar, Any
 
-from app.services.entity.keyword import KeywordGroup, Keyword, KeywordGroupMap
+from pydantic import BaseModel
 
-DTO = TypeVar("DTO")
+from app.services.entity.keyword import (
+    KeywordGroupDTO,
+    KeywordDTO,
+    KeywordGroupMapDTO,
+    KeywordGroupMapCreate,
+)
+
+DTO = TypeVar("DTO", bound=BaseModel)
 
 
 class Repo(Generic[DTO]):
@@ -26,20 +33,21 @@ class Repo(Generic[DTO]):
     async def delete(self, filters: dict) -> None: ...
 
 
-class KeywordGroupRepo(Repo[KeywordGroup], ABC):
+class KeywordGroupRepo(Repo[KeywordGroupDTO], ABC):
     @abstractmethod
-    async def get_by_title(self, title: str) -> KeywordGroup | None: ...
+    async def get_by_title(self, title: str) -> KeywordGroupDTO | None: ...
 
 
-class KeywordRepo(Repo[Keyword], ABC):
+class KeywordRepo(Repo[KeywordDTO], ABC):
     @abstractmethod
     async def create_if_not_exists(
-        self, keywords: list[str]
-    ) -> list[Keyword] | None: ...
+        self,
+        keywords: list[dict[str, Any]],  # TODO instead of list use dict
+    ) -> list[KeywordDTO] | None: ...
 
 
-class KeywordGroupMapRepo(Repo[KeywordGroupMap], ABC):
+class KeywordGroupMapRepo(Repo[KeywordGroupMapDTO], ABC):
     @abstractmethod
     async def create_keywords_group_maps(
-        self, keyword_group_maps: list[KeywordGroupMap]
-    ) -> list[KeywordGroupMap] | None: ...
+        self, keyword_group_maps: list[KeywordGroupMapCreate]
+    ) -> list[KeywordGroupMapDTO] | None: ...

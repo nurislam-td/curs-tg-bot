@@ -1,46 +1,43 @@
 from app.services.abstract.unit_of_work import UnitOfWork
 from app.services.abstract.tokenizer import Tokenizer
-from app.services.entity.keyword import KeywordGroup, KeywordGroupMap
+from app.services.entity.keyword import (
+    KeywordGroupCreate,
+    KeywordGroupMapCreate,
+    KeywordGroupDTO,
+    KeywordCreate,
+)
 
 
 async def set_keywords(
-    keywords_text: str, group: KeywordGroup, uow: UnitOfWork, tokenizer: Tokenizer
+    keywords_text: str, group: KeywordGroupDTO, uow: UnitOfWork, tokenizer: Tokenizer
 ):
-    keywords = "".join(keywords_text.split(" ")).split(",")
-    tokens = [tokenizer.tokenize_text(keyword) for keyword in keywords]
+    tokens = tokenizer.process_text(keywords_text)
+    keywords = [KeywordCreate(keyword=token).model_dump() for token in tokens]
     async with uow:
-        created = await uow.keyword.create_if_not_exists(tokens)
+        await uow.keyword.create_if_not_exists(keywords)
         keyword_group_map = [
-            KeywordGroupMap(keyword_id=keyword.id, group_id=group.id)
-            for keyword in created
+            KeywordGroupMapCreate(keyword_id=keyword["id"], group_id=group.id)
+            for keyword in keywords
         ]
         await uow.keyword_group_map.create_keywords_group_maps(keyword_group_map)
         await uow.commit()
-    return created
+    return keywords  # TODO
 
 
-async def create_keyword_group(
-    keyword_group: KeywordGroup, uow: UnitOfWork
-) -> KeywordGroup:
-    async with uow:
-        created = await uow.keyword_group.create(values=keyword_group.as_dict())
-        await uow.commit()
-    return created
-
-
-async def get_keyword_groups(uow: UnitOfWork) -> list[KeywordGroup]:
+async def get_keyword_groups(uow: UnitOfWork) -> list[KeywordGroupDTO]:
     async with uow:
         keyword_groups = await uow.keyword_group.get_all()
     return keyword_groups
 
 
-async def get_keyword_group(uow: UnitOfWork, group_title: str) -> KeywordGroup:
+async def get_keyword_group(uow: UnitOfWork, group_title: str) -> KeywordGroupDTO:
     async with uow:
         keyword_group = await uow.keyword_group.get_by_title(group_title)
     return keyword_group
 
 
-async def add_group(uow: UnitOfWork, group: KeywordGroup) -> KeywordGroup:
+async def add_group(uow: UnitOfWork, group: KeywordGroupCreate) -> KeywordGroupDTO:
     async with uow:
-        keyword_group = await uow.keyword_group.create(values=group.as_dict())
+        keyword_group = await uow.keyword_group.create(values=group.model_dump())
+        await uow.commit()
     return keyword_group

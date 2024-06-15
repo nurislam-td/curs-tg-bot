@@ -2,6 +2,7 @@ from aiogram.types import Message
 
 from app.services.abstract.unit_of_work import UnitOfWork
 from app.adapters.unit_of_work import SQLAlchemyUnitOfWork
+from app.adapters.tokenizer import NLTKTokenizer
 from aiogram.filters import BaseFilter
 
 
@@ -18,7 +19,8 @@ class UnitOfWork(BaseFilter):
 
 
 class Tokenizer(BaseFilter):
-    def __init__(self): ...
+    def __init__(self):
+        self.tokenizer = NLTKTokenizer()
 
-    def __call__(self, message: Message):
-        return {"tokenizer": ...}
+    async def __call__(self, message: Message):
+        return {"tokenizer": self.tokenizer}
