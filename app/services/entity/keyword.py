@@ -15,7 +15,7 @@ class KeywordCreate(BaseModel):
 
 
 class KeywordGroupMapCreate(BaseModel):
-    keyword_id: int
+    keyword_id: uuid.UUID
     group_id: int
 
 

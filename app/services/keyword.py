@@ -12,6 +12,7 @@ async def set_keywords(
     keywords_text: str, group: KeywordGroupDTO, uow: UnitOfWork, tokenizer: Tokenizer
 ):
     tokens = tokenizer.process_text(keywords_text)
+    tokens = set(tokens)
     keywords = [KeywordCreate(keyword=token).model_dump() for token in tokens]
     async with uow:
         await uow.keyword.create_if_not_exists(keywords)

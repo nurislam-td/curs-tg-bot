@@ -68,8 +68,8 @@ async def configure_bot_add_group_description(
         description=message.text,
     )
     await state.clear()
-    group = await keyword.add_group(uow=uow, group=group)
-    await state.update_data(group=group)
+    group_created = await keyword.add_group(uow=uow, group=group)
+    await state.update_data(group=group_created)
 
     await message.answer(
         text="Супер группа была добавлена, наберите слова которые вы хотите добавить в группу"
