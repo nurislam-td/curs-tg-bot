@@ -43,7 +43,7 @@ class KeywordRepo(Repo[KeywordDTO], ABC):
     @abstractmethod
     async def create_if_not_exists(
         self,
-        keywords: list[KeywordCreate],  # TODO instead of list use dict
+        keywords: list[KeywordCreate],
     ) -> None: ...
 
     @abstractmethod
