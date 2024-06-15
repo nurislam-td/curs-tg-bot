@@ -10,6 +10,7 @@ from app.services.abstract.tokenizer import Tokenizer
 from app.services.entity.keyword import KeywordGroupCreate
 from app.states.configure_bot import ConfigureBot
 from app.services import keyword
+from app.keyboards.callbacks import KeywordGroupCallback
 
 router = Router()
 
@@ -27,18 +28,21 @@ async def configure_bot_start(callback_query: CallbackQuery, uow: UnitOfWork):
 
 
 @router.callback_query(
-    F.data == CallbackDataText.select_group, dependencies.UnitOfWork()
+    KeywordGroupCallback.filter(F.action == CallbackDataText.select_group),
+    dependencies.UnitOfWork(),
 )
 async def configure_bot_select_groups(
-    callback_query: CallbackQuery, state: FSMContext, uow
+    callback_query: CallbackQuery,
+    callback_data: KeywordGroupCallback,
+    state: FSMContext,
+    uow,
 ):
     await callback_query.answer()
-    selected_group = callback_query.message.text
-    group = await keyword.get_keyword_group(uow=uow, group_title=selected_group)
+    group = await keyword.get_keyword_group(uow=uow, group_id=callback_data.group_id)
     await state.update_data(group=group)
     await state.set_state(ConfigureBot.keywords)
     await callback_query.message.answer(
-        text=f"Наберите слова которые вы хотите добавить в группу {selected_group} через запятую"
+        text=f"Наберите слова которые вы хотите добавить в группу {group.title} через запятую"
     )
 
 

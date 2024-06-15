@@ -1,5 +1,5 @@
 from abc import abstractmethod, ABC
-from typing import Generic, TypeVar, Any
+from typing import Generic, TypeVar
 
 from pydantic import BaseModel
 
@@ -8,6 +8,7 @@ from app.services.entity.keyword import (
     KeywordDTO,
     KeywordGroupMapDTO,
     KeywordGroupMapCreate,
+    KeywordCreate,
 )
 
 DTO = TypeVar("DTO", bound=BaseModel)
@@ -42,12 +43,15 @@ class KeywordRepo(Repo[KeywordDTO], ABC):
     @abstractmethod
     async def create_if_not_exists(
         self,
-        keywords: list[dict[str, Any]],  # TODO instead of list use dict
-    ) -> list[KeywordDTO] | None: ...
+        keywords: list[KeywordCreate],  # TODO instead of list use dict
+    ) -> None: ...
+
+    @abstractmethod
+    async def get_by_keywords(self, keywords: set[str]) -> list[KeywordDTO] | None: ...
 
 
 class KeywordGroupMapRepo(Repo[KeywordGroupMapDTO], ABC):
     @abstractmethod
     async def create_keywords_group_maps(
         self, keyword_group_maps: list[KeywordGroupMapCreate]
-    ) -> list[KeywordGroupMapDTO] | None: ...
+    ) -> None: ...

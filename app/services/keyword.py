@@ -5,6 +5,7 @@ from app.services.entity.keyword import (
     KeywordGroupMapCreate,
     KeywordGroupDTO,
     KeywordCreate,
+    KeywordDTO,
 )
 
 
@@ -13,16 +14,20 @@ async def set_keywords(
 ):
     tokens = tokenizer.process_text(keywords_text)
     tokens = set(tokens)
-    keywords = [KeywordCreate(keyword=token).model_dump() for token in tokens]
+    keywords = [KeywordCreate(keyword=token) for token in tokens]
     async with uow:
         await uow.keyword.create_if_not_exists(keywords)
+        keywords_db: list[KeywordDTO] = await uow.keyword.get_by_keywords(
+            keywords=tokens
+        )
+
         keyword_group_map = [
-            KeywordGroupMapCreate(keyword_id=keyword["id"], group_id=group.id)
-            for keyword in keywords
+            KeywordGroupMapCreate(keyword_id=keyword.id, group_id=group.id)
+            for keyword in keywords_db
         ]
         await uow.keyword_group_map.create_keywords_group_maps(keyword_group_map)
         await uow.commit()
-    return keywords  # TODO
+    return keywords_db
 
 
 async def get_keyword_groups(uow: UnitOfWork) -> list[KeywordGroupDTO]:
@@ -31,9 +36,9 @@ async def get_keyword_groups(uow: UnitOfWork) -> list[KeywordGroupDTO]:
     return keyword_groups
 
 
-async def get_keyword_group(uow: UnitOfWork, group_title: str) -> KeywordGroupDTO:
+async def get_keyword_group(uow: UnitOfWork, group_id: int) -> KeywordGroupDTO:
     async with uow:
-        keyword_group = await uow.keyword_group.get_by_title(group_title)
+        keyword_group = await uow.keyword_group.get(group_id)
     return keyword_group
 
 

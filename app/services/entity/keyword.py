@@ -1,6 +1,4 @@
-import uuid
-
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class KeywordGroupCreate(BaseModel):
@@ -10,12 +8,11 @@ class KeywordGroupCreate(BaseModel):
 
 
 class KeywordCreate(BaseModel):
-    id: uuid.UUID = Field(default_factory=uuid.uuid4)
     keyword: str
 
 
 class KeywordGroupMapCreate(BaseModel):
-    keyword_id: uuid.UUID
+    keyword_id: int
     group_id: int
 
 

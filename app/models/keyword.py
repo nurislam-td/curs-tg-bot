@@ -4,14 +4,14 @@ from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base
-from app.models.mixins import TimeStampMixin, IntPKMixin, UUIDPKMixin
+from app.models.mixins import TimeStampMixin, IntPKMixin
 
 if TYPE_CHECKING:
     from app.models.user import TGUser
     from app.models.chat import Chat
 
 
-class Keyword(UUIDPKMixin, Base):
+class Keyword(IntPKMixin, Base):
     __tablename__ = "keyword"
     keyword: Mapped[str] = mapped_column(index=True, unique=True)
     keyword_map: Mapped[list["KeywordMap"]] = relationship(

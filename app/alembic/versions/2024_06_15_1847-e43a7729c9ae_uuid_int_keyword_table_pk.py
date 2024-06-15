@@ -1,8 +1,8 @@
-"""change keyword table pk int->uuid
+"""uuid->int keyword table pk
 
-Revision ID: 6b07e3c950a1
+Revision ID: e43a7729c9ae
 Revises: 
-Create Date: 2024-06-10 11:01:52.390314
+Create Date: 2024-06-15 18:47:20.694603
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '6b07e3c950a1'
+revision: str = 'e43a7729c9ae'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -29,7 +29,7 @@ def upgrade() -> None:
     op.create_index(op.f('ix_chat_id'), 'chat', ['id'], unique=False)
     op.create_table('keyword',
     sa.Column('keyword', sa.String(), nullable=False),
-    sa.Column('id', sa.Uuid(), server_default=sa.text('gen_random_uuid()'), nullable=False),
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_keyword_id'), 'keyword', ['id'], unique=False)
@@ -50,7 +50,7 @@ def upgrade() -> None:
     op.create_index(op.f('ix_tg_user_id'), 'tg_user', ['id'], unique=False)
     op.create_table('keyword_group_keyword_map',
     sa.Column('group_id', sa.Integer(), nullable=False),
-    sa.Column('keyword_id', sa.Uuid(), nullable=False),
+    sa.Column('keyword_id', sa.Integer(), nullable=False),
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.ForeignKeyConstraint(['group_id'], ['keyword_group.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['keyword_id'], ['keyword.id'], ondelete='CASCADE'),
@@ -61,7 +61,7 @@ def upgrade() -> None:
     op.create_index(op.f('ix_keyword_group_keyword_map_keyword_id'), 'keyword_group_keyword_map', ['keyword_id'], unique=False)
     op.create_table('keyword_map',
     sa.Column('chat_id', sa.String(), nullable=False),
-    sa.Column('keyword_id', sa.Uuid(), nullable=False),
+    sa.Column('keyword_id', sa.Integer(), nullable=False),
     sa.Column('tg_user_id', sa.String(), nullable=False),
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text("(now() at time zone 'utc')"), nullable=False),
